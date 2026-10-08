@@ -1,0 +1,6 @@
+services:
+  servera:
+    image: nginx
+
+  serverb:
+    image: redis

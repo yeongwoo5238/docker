@@ -1,0 +1,35 @@
+docker network create mynet
+docker run -d --name mongo --network mynet --restart=always \
+  -e  MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=example \
+  mongo
+
+
+# https://hub.docker.com/_/mongo#-via-docker-compose
+#services:
+#  mongo:
+#    image: mongo
+#    restart: always
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+
+
+docker run -d --name mongo-express --network=mynet --restart=always \
+  -p 8081:8081 \
+  -e ME_CONFIG_MONGODB_URL="mongodb://root:example@mongo:27017/" \
+  -e ME_CONFIG_BASICAUTH_ENABLED=true \
+  -e ME_CONFIG_BASICAUTH_USERNAME=mongoexpressuser \
+  -e ME_CONFIG_BASICAUTH_PASSWORD=mongoexpresspass \
+  mongo-express 
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+  #     ME_CONFIG_BASICAUTH_ENABLED: true
+  #     ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
+  #     ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+  #   depends_on:
+  #     - mongo
